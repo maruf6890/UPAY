@@ -1,0 +1,15 @@
+{
+  "test_rows": 3166,
+  "test_positive_rate": 0.018635502210991788,
+  "auc_model": 0.9357274170407991,
+  "auc_simple_rule": 0.8248132974748108,
+  "average_precision_model": 0.833227319230539,
+  "average_precision_simple_rule": 0.10077119381502152,
+  "precision_at_10_per_week_model": 0.4166666666666667,
+  "precision_at_10_per_week_simple_rule": 0.2916666666666667,
+  "precision_at_medium_threshold": 0.8135593220338984,
+  "recall_at_medium_threshold": 0.8135593220338984,
+  "train_last_week_index": 39,
+  "test_first_week_index": 44,
+  "note": "Synthetic data: churn episodes were injected by the generator, so these numbers show the method works, not real-world accuracy."
+}

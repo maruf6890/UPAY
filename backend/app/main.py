@@ -16,7 +16,8 @@ from app.services.brief_service import BriefService
 from app.services.liquidity_service import LiquidityService
 from app.services.llm_service import LLMService
 from app.services.store import AlertStore, DataStore
-
+from app.api.routes_agent_intel import router as agent_intel_router
+from app.services.agent_intel_service import AgentIntelService
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,6 +31,11 @@ async def lifespan(app: FastAPI):
         anom = await asyncio.to_thread(AnomalyService, store, s, alerts)
         llm = LLMService(s)
         app.state.ctx = Ctx(s, pool, store, alerts, liq, anom, llm, BriefService(liq, anom, llm))
+        app.state.agent_intel = await AgentIntelService.create(
+            pool,
+            store.agents,
+            s,
+        )
         await liq.assess()          # warm the cache for the demo date
         yield
     finally:
@@ -40,3 +46,4 @@ app = FastAPI(title="upay Pulse - Agent Liquidity & Risk Intelligence", version=
               description="Track 05 (Merchant & Agent Intelligence). Synthetic data only. Forecasts and alerts are advisory.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(router)
+app.include_router(agent_intel_router)
