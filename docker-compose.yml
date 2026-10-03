@@ -1,0 +1,86 @@
+services:
+  db:
+    image: postgres:16
+    container_name: upay_pulse_db
+    environment:
+      POSTGRES_USER: upay
+      POSTGRES_PASSWORD: upay
+      POSTGRES_DB: upay_pulse
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U upay -d upay_pulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  seed:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://upay:upay@db:5432/upay_pulse
+      APP_ENV: dev
+      AUTO_MIGRATE: "true"
+    volumes:
+      - ./backend/artifacts:/app/artifacts
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    command: ["sh", "/app/scripts/docker_seed.sh"]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: upay_pulse_api
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://upay:upay@db:5432/upay_pulse
+      AUTO_MIGRATE: "true"
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/artifacts:/app/artifacts
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/openapi.json')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 90s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SHOW_DEMO_LOGINS: "true"
+    container_name: upay_pulse_web
+    environment:
+      API_BASE_URL: http://backend:8000
+      COOKIE_SECURE: "false"
+      SESSION_DAYS: "7"
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:
