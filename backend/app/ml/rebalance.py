@@ -20,19 +20,21 @@ def plan_route(risk: pd.DataFrame, van_capacity_bdt: float = 5_000_000, max_stop
     float_only = risk[(risk.float_topup_bdt > 0) & (risk.risk_level.isin(["HIGH", "MEDIUM"]))]
     digital = float_only[["agent_code", "float_topup_bdt"]].to_dict("records")
     if cand.empty:
-        return dict(stops=[], total_km=0.0, total_cash_bdt=0.0, digital_transfers=digital, depot=None, unserved=[])
+        return dict(stops=[], total_km=0.0, total_cash_bdt=0.0, digital_transfers=digital, depot=None, unserved=[],
+                    reason="no_agents_need_cash", smallest_topup_bdt=None)
     cand["priority"] = cand.stockout_prob * cand.cash_topup_bdt
     cand = cand.sort_values("priority", ascending=False)
     chosen, used = [], 0.0
     for _, r in cand.iterrows():                     # greedy knapsack by priority
         if len(chosen) >= max_stops:
             break
-        if len(chosen) == 0:
-            nothing_served = cand[["agent_code", "cash_topup_bdt"]].head(10).to_dict("records")
-            return dict(stops=[], total_km=0.0, total_cash_bdt=0.0, digital_transfers=digital, depot=None, unserved=nothing_served)
         if used + r.cash_topup_bdt <= van_capacity_bdt:
             chosen.append(r)
             used += r.cash_topup_bdt
+    if len(chosen) == 0:                     # nothing fits (tiny van or max_stops = 0): return an empty plan, not a crash
+        nothing_served = cand[["agent_code", "cash_topup_bdt"]].head(10).to_dict("records")
+        return dict(stops=[], total_km=0.0, total_cash_bdt=0.0, digital_transfers=digital, depot=None, unserved=nothing_served,
+                    reason="van_too_small", smallest_topup_bdt=float(cand["cash_topup_bdt"].min()))
     chosen_ids = {r.agent_code for r in chosen}
     unserved = cand[~cand.agent_code.isin(chosen_ids)][["agent_code", "cash_topup_bdt"]].head(10).to_dict("records")
     pts = pd.DataFrame(chosen)
@@ -52,4 +54,5 @@ def plan_route(risk: pd.DataFrame, van_capacity_bdt: float = 5_000_000, max_stop
         cur = (r.lat, r.lon)
         left.remove(j)
     return dict(stops=order, total_km=round(total_km, 1), total_cash_bdt=float(used),
-                digital_transfers=digital, depot={"lat": round(dep[0], 4), "lon": round(dep[1], 4)}, unserved=unserved)
+                digital_transfers=digital, depot={"lat": round(dep[0], 4), "lon": round(dep[1], 4)}, unserved=unserved,
+                reason=None, smallest_topup_bdt=None)
