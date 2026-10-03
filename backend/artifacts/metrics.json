@@ -1,0 +1,192 @@
+{
+  "split": {
+    "train_end": "2026-04-01",
+    "val_end": "2026-05-01",
+    "test_start": "2026-05-02"
+  },
+  "hourly_forecast": {
+    "mae_norm_ai": 0.3184855451886659,
+    "mae_norm_baseline": 0.4260712265968323,
+    "pinball_p90_ai": 0.08057533528483325,
+    "pinball_p90_baseline": 0.11983327567577362,
+    "coverage_p90_ai": 0.8749895833333333,
+    "coverage_p90_baseline": 0.8389305555555555,
+    "coverage_p10_ai": 0.8977326388888889,
+    "daily_net_wape_ai": 0.1007741377076088,
+    "daily_net_wape_baseline": 0.21371589601039886,
+    "mae_improvement_pct": 25.250632920577097,
+    "daily_wape_improvement_pct": 52.846681230157344
+  },
+  "peak_drain_p90": {
+    "coverage_cash_ai": 0.8453888888888889,
+    "coverage_cash_baseline": 0.8348333333333333,
+    "coverage_float_ai": 0.9053333333333333,
+    "coverage_float_baseline": 0.8984444444444445,
+    "mean_buffer_bdt_ai": 514653.62285334896,
+    "mean_buffer_bdt_baseline": 659470.0,
+    "buffer_reduction_pct_at_equal_coverage": 21.95950947679971
+  },
+  "policy_simulation": {
+    "AI (LightGBM P90)": {
+      "stockout_agent_hours": 22377,
+      "stockout_hour_rate": 0.07769791666666667,
+      "agent_days_with_stockout": 9838,
+      "unserved_bdt": 612446720.0,
+      "lost_commission_bdt": 3062233.5,
+      "liquidity_injected_bdt": 1013385375.554318,
+      "avg_start_of_day_liquidity_bdt": 524653.622853349
+    },
+    "habitual (status quo)": {
+      "stockout_agent_hours": 31459,
+      "stockout_hour_rate": 0.10923263888888889,
+      "agent_days_with_stockout": 5905,
+      "unserved_bdt": 1804439296.0,
+      "lost_commission_bdt": 9022196.0,
+      "liquidity_injected_bdt": 1.0458984375,
+      "avg_start_of_day_liquidity_bdt": 558387.3333333334
+    },
+    "7-day moving average": {
+      "stockout_agent_hours": 25526,
+      "stockout_hour_rate": 0.08863194444444444,
+      "agent_days_with_stockout": 8767,
+      "unserved_bdt": 1026264320.0,
+      "lost_commission_bdt": 5131321.5,
+      "liquidity_injected_bdt": 488600842.3820801,
+      "avg_start_of_day_liquidity_bdt": 669470.0272635905
+    },
+    "habitual (liquidity-matched)": {
+      "stockout_agent_hours": 34985,
+      "stockout_hour_rate": 0.12147569444444445,
+      "agent_days_with_stockout": 6555,
+      "unserved_bdt": 1956743808.0,
+      "lost_commission_bdt": 9783719.0,
+      "liquidity_injected_bdt": 3.4139520721510053e-07,
+      "avg_start_of_day_liquidity_bdt": 525205.8204101563
+    },
+    "7-day moving average (liquidity-matched)": {
+      "stockout_agent_hours": 41519,
+      "stockout_hour_rate": 0.14416319444444445,
+      "agent_days_with_stockout": 11492,
+      "unserved_bdt": 1707546112.0,
+      "lost_commission_bdt": 8537730.0,
+      "liquidity_injected_bdt": 378316271.2084961,
+      "avg_start_of_day_liquidity_bdt": 525409.7692132161
+    },
+    "summary": {
+      "note": "Matched = same average start-of-day liquidity as the AI policy, so gains come from smarter allocation, not just holding more cash.",
+      "stockout_hours_reduction_vs_habitual_pct": 28.869321974633657,
+      "stockout_hours_reduction_vs_habitual_matched_pct": 36.038302129484066,
+      "stockout_hours_reduction_vs_moving_avg_matched_pct": 46.104193260916695,
+      "unserved_volume_saved_vs_habitual_matched_bdt": 1344297088.0,
+      "commission_saved_vs_habitual_matched_bdt": 6721485.5,
+      "n_agents": 300,
+      "test_days": 60
+    }
+  },
+  "fairness": {
+    "area_type": [
+      {
+        "area_type": "rural",
+        "mae_norm_ai": 0.4151,
+        "mae_norm_baseline": 0.5767999887466431,
+        "p90_cash_coverage_ai": 0.7873,
+        "stockout_rate_habitual": 0.1843,
+        "stockout_rate_ai": 0.0899
+      },
+      {
+        "area_type": "semi_urban",
+        "mae_norm_ai": 0.3128,
+        "mae_norm_baseline": 0.36320000886917114,
+        "p90_cash_coverage_ai": 0.9118,
+        "stockout_rate_habitual": 0.1018,
+        "stockout_rate_ai": 0.073
+      },
+      {
+        "area_type": "urban",
+        "mae_norm_ai": 0.2627,
+        "mae_norm_baseline": 0.35670000314712524,
+        "p90_cash_coverage_ai": 0.8583,
+        "stockout_rate_habitual": 0.0905,
+        "stockout_rate_ai": 0.072
+      }
+    ],
+    "division": [
+      {
+        "division": "Barishal",
+        "mae_norm_ai": 0.343,
+        "mae_norm_baseline": 0.4401000142097473,
+        "p90_cash_coverage_ai": 0.8636,
+        "stockout_rate_habitual": 0.14,
+        "stockout_rate_ai": 0.067
+      },
+      {
+        "division": "Chattogram",
+        "mae_norm_ai": 0.2915,
+        "mae_norm_baseline": 0.36169999837875366,
+        "p90_cash_coverage_ai": 0.89,
+        "stockout_rate_habitual": 0.1011,
+        "stockout_rate_ai": 0.0735
+      },
+      {
+        "division": "Dhaka",
+        "mae_norm_ai": 0.2825,
+        "mae_norm_baseline": 0.39579999446868896,
+        "p90_cash_coverage_ai": 0.835,
+        "stockout_rate_habitual": 0.0996,
+        "stockout_rate_ai": 0.0761
+      },
+      {
+        "division": "Khulna",
+        "mae_norm_ai": 0.3954,
+        "mae_norm_baseline": 0.5379999876022339,
+        "p90_cash_coverage_ai": 0.8089,
+        "stockout_rate_habitual": 0.1791,
+        "stockout_rate_ai": 0.0872
+      },
+      {
+        "division": "Mymensingh",
+        "mae_norm_ai": 0.3437,
+        "mae_norm_baseline": 0.4537999927997589,
+        "p90_cash_coverage_ai": 0.8449,
+        "stockout_rate_habitual": 0.1213,
+        "stockout_rate_ai": 0.0764
+      },
+      {
+        "division": "Rajshahi",
+        "mae_norm_ai": 0.3748,
+        "mae_norm_baseline": 0.4959999918937683,
+        "p90_cash_coverage_ai": 0.8299,
+        "stockout_rate_habitual": 0.1737,
+        "stockout_rate_ai": 0.0875
+      },
+      {
+        "division": "Rangpur",
+        "mae_norm_ai": 0.3372,
+        "mae_norm_baseline": 0.4260999858379364,
+        "p90_cash_coverage_ai": 0.8528,
+        "stockout_rate_habitual": 0.1412,
+        "stockout_rate_ai": 0.0755
+      },
+      {
+        "division": "Sylhet",
+        "mae_norm_ai": 0.3744,
+        "mae_norm_baseline": 0.5034999847412109,
+        "p90_cash_coverage_ai": 0.8314,
+        "stockout_rate_habitual": 0.1469,
+        "stockout_rate_ai": 0.0828
+      }
+    ]
+  },
+  "anomaly": {
+    "roc_auc_agent_day": 0.8889216974697652,
+    "r_precision_mean": 0.44,
+    "precision_at_threshold": 0.23902439024390243,
+    "recall_at_threshold": 0.5212765957446809,
+    "episode_detection_rate": 0.6666666666666666,
+    "false_alerts_per_day": 2.6,
+    "thresholds": {
+      "medium": 0.4695935180806607,
+      "high": 0.4939873855142164
+    }
+  }
+}
