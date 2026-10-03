@@ -5,6 +5,7 @@ and re-checks that the older endpoints still work.
 from fastapi.testclient import TestClient
 
 from app.main import app
+from scripts._auth_helper import login
 
 
 def call(client, path):
@@ -17,6 +18,7 @@ def call(client, path):
 
 
 with TestClient(app) as client:
+    login(client)
     print("--- C1 coverage map")
     summary = call(client, "/coverage/summary")
     print("   hexagons by type:", summary["hexagons_by_gap_type"])

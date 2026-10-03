@@ -27,6 +27,9 @@ def plan_route(risk: pd.DataFrame, van_capacity_bdt: float = 5_000_000, max_stop
     for _, r in cand.iterrows():                     # greedy knapsack by priority
         if len(chosen) >= max_stops:
             break
+        if len(chosen) == 0:
+            nothing_served = cand[["agent_code", "cash_topup_bdt"]].head(10).to_dict("records")
+            return dict(stops=[], total_km=0.0, total_cash_bdt=0.0, digital_transfers=digital, depot=None, unserved=nothing_served)
         if used + r.cash_topup_bdt <= van_capacity_bdt:
             chosen.append(r)
             used += r.cash_topup_bdt

@@ -2,8 +2,10 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
+from scripts._auth_helper import login
 
 with TestClient(app) as c:
+    login(c)
     def show(path, **kw):
         r = c.request(kw.pop("method", "GET"), path, **kw)
         print(f"{r.status_code}  {path}")

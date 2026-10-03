@@ -6,6 +6,8 @@ import pandas as pd
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.api.deps import Ctx, get_ctx
+from app.auth.deps import get_current_user
+from app.auth.schemas import CurrentUser
 from app.core.constants import parse_agent_code
 from app.core.utils import clean
 from app.ml.rebalance import plan_route
@@ -102,7 +104,7 @@ async def risk(as_of: str | None = None, district: str | None = None, level: str
 
 @router.get("/rebalance", tags=["liquidity"])
 async def rebalance(as_of: str | None = None, district: str | None = None, van_capacity_bdt: float = Query(5_000_000, gt=0),
-              max_stops: int = Query(12,ge=1, le=40), ctx: Ctx = Depends(get_ctx)):
+              max_stops: int = Query(12, ge=1, le=40), ctx: Ctx = Depends(get_ctx)):
     """Greedy DSO route: highest (risk x shortfall) first within van cash capacity, ordered nearest-neighbour."""
     ts = _as_of(ctx, as_of)
     r = await ctx.liquidity.risk_table(ts, district)
@@ -118,12 +120,14 @@ async def alerts(as_of: str | None = None, status: str | None = Query(None, patt
 
 
 @router.post("/alerts/{alert_id}/review", tags=["anomaly"])
-async def review_alert(alert_id: str, body: ReviewRequest, ctx: Ctx = Depends(get_ctx)):
+async def review_alert(alert_id: str, body: ReviewRequest, ctx: Ctx = Depends(get_ctx),
+                       user: CurrentUser = Depends(get_current_user)):
+    """The reviewer recorded in the audit trail is the LOGGED-IN user. The 'reviewer' field in the body is ignored."""
     try:
         await ctx.anomaly.get_alert(alert_id)
     except (KeyError, ValueError):
         raise HTTPException(404, "Alert not found")
-    return clean(dict(alert_id=alert_id, **await ctx.alerts.review(alert_id, body.decision, body.reviewer, body.note)))
+    return clean(dict(alert_id=alert_id, **await ctx.alerts.review(alert_id, body.decision, user.username, body.note)))
 
 
 @router.get("/alerts/{alert_id}/narrative", tags=["anomaly"])

@@ -22,6 +22,19 @@ from app.api.routes_copilot import router as copilot_router
 from app.api.routes_coverage import router as coverage_router
 from app.services.copilot_service import CopilotService
 from app.services.coverage_service import CoverageService
+
+from fastapi import Depends
+
+from app.auth.deps import login_required
+from app.auth.security import check_auth_settings
+
+from app.api.routes_auth import router as auth_router
+from app.api.routes_dashboard import router as dashboard_router
+
+from app.services.dashboard_service import DashboardService
+
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     s = get_settings()
@@ -53,6 +66,12 @@ async def lifespan(app: FastAPI):
             getattr(app.state, "agent_intel", None),
             getattr(app.state, "coverage", None),
         )
+        app.state.dashboard = DashboardService(
+            app.state.ctx,
+            getattr(app.state, "agent_intel", None),
+            getattr(app.state, "coverage", None),
+        )
+        
         await liq.assess()          # warm the cache for the demo date
         yield
     finally:
@@ -62,7 +81,23 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="upay Pulse - Agent Liquidity & Risk Intelligence", version="0.2.0", lifespan=lifespan,
               description="Track 05 (Merchant & Agent Intelligence). Synthetic data only. Forecasts and alerts are advisory.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-app.include_router(router)
-app.include_router(agent_intel_router)
-app.include_router(coverage_router)
-app.include_router(copilot_router)
+protected = [Depends(login_required)]
+app.include_router(auth_router)
+app.include_router(router, dependencies=protected)
+
+app.include_router(
+    agent_intel_router,
+    dependencies=protected,
+)
+
+app.include_router(
+    coverage_router,
+    dependencies=protected,
+)
+
+app.include_router(
+    copilot_router,
+    dependencies=protected,
+)
+
+app.include_router(dashboard_router)

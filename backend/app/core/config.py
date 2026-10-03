@@ -39,7 +39,17 @@ class Settings(BaseSettings):
     reserve_bdt: float = 5000.0          # minimum cash / float an agent wants left over
     commission_rate: float = 0.005       # ASSUMPTION: 0.5% revenue on transaction value (for BDT impact)
     demo_as_of: str = "2026-05-20 08:00"  # 8 days before Eid-ul-Adha 2026 (good risk mix)
+    app_env: str = "dev"
 
+    jwt_secret: str = "dev-only-secret-change-me-before-you-share-this-app-0123456789"
+    jwt_algorithm: str = "HS256"
+
+    access_token_minutes: int = 60
+    refresh_token_days: int = 7
+    max_failed_logins: int = 5
+    lockout_minutes: int = 15
+
+    cors_origins: str = "*"
 
     @property
     def dsn(self) -> str:

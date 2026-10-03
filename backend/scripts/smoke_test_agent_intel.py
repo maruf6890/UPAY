@@ -2,6 +2,7 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
+from scripts._auth_helper import login
 
 
 def call(client, path):
@@ -14,6 +15,7 @@ def call(client, path):
 
 
 with TestClient(app) as client:
+    login(client)
     weeks = call(client, "/intel/weeks")
     print("   default week:", weeks["last_week"], "| default index:", weeks["default_week"])
 
