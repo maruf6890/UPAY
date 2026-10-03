@@ -18,7 +18,10 @@ from app.services.llm_service import LLMService
 from app.services.store import AlertStore, DataStore
 from app.api.routes_agent_intel import router as agent_intel_router
 from app.services.agent_intel_service import AgentIntelService
-
+from app.api.routes_copilot import router as copilot_router
+from app.api.routes_coverage import router as coverage_router
+from app.services.copilot_service import CopilotService
+from app.services.coverage_service import CoverageService
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     s = get_settings()
@@ -36,6 +39,20 @@ async def lifespan(app: FastAPI):
             store.agents,
             s,
         )
+        app.state.coverage = CoverageService(
+            pool,
+            store,
+            s.demo_as_of,
+            s.commission_rate,
+        )
+        app.state.copilot = CopilotService(
+            s,
+            liq,
+            anom,
+            app.state.ctx.brief,
+            getattr(app.state, "agent_intel", None),
+            getattr(app.state, "coverage", None),
+        )
         await liq.assess()          # warm the cache for the demo date
         yield
     finally:
@@ -47,3 +64,5 @@ app = FastAPI(title="upay Pulse - Agent Liquidity & Risk Intelligence", version=
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(router)
 app.include_router(agent_intel_router)
+app.include_router(coverage_router)
+app.include_router(copilot_router)
