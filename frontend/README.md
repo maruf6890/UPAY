@@ -15,7 +15,9 @@ Next.js 16 (App Router) + React 19 + Tailwind 4 + shadcn/ui style components + Z
 
 ## 1. Run it
 
-You need the backend running first (it must include the login add-on, with the demo accounts created).
+From the repository root, `docker compose up --build` starts the UI, API, and Postgres together (http://localhost:3000).
+
+To run only the frontend on the host, you need the backend running first (it must include the login add-on, with the demo accounts created).
 
 ```bash
 cd upay-pulse-frontend

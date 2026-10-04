@@ -1,9 +1,9 @@
 """Database migrations.
-  python3 -m scripts.migrate status
-  python3 -m scripts.migrate up [--to 2]
-  python3 -m scripts.migrate down [--steps 1 | --to 1]
-  python3 -m scripts.migrate new add_something
-  python3 -m scripts.migrate reset --yes        (down everything, then up - dev only)
+  python -m scripts.migrate status
+  python -m scripts.migrate up [--to 2]
+  python -m scripts.migrate down [--steps 1 | --to 1]
+  python -m scripts.migrate new add_something
+  python -m scripts.migrate reset --yes        (down everything, then up - dev only)
 """
 import argparse
 import asyncio

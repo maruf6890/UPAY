@@ -5,8 +5,17 @@ LangChain / Google Gemini daily brief. **All data is synthetic.**
 
 ## 1. Setup (Python virtual environment + PostgreSQL)
 
+Full stack in Docker (API + UI + Postgres) from the **repository root** (parent of this folder):
+
 ```bash
-docker compose up -d db              # PostgreSQL 16 on localhost:5432 (user/pass/db = upay / upay / upay_pulse)
+cp backend/.env.example backend/.env   # if you have not already
+docker compose up --build              # first run seeds data; UI at http://localhost:3000
+```
+
+Host-based API (this folder) + Postgres only:
+
+```bash
+docker compose up -d db              # PostgreSQL 16 on localhost:5434 (user/pass/db = upay / upay / upay_pulse)
 python3 -m venv .venv
 source .venv/bin/activate            # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
