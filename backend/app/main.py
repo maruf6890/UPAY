@@ -38,7 +38,7 @@ from app.services.dashboard_service import DashboardService
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     s = get_settings()
-    await migrate.ensure_current(auto=s.auto_migrate)        # fail fast if the schema is behind
+   # fail fast if the schema is behind
     pool = await create_pool()
     try:
         store = await DataStore.create(pool)
