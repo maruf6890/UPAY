@@ -201,8 +201,9 @@ class CoverageService:
             "monthly_volume_lost_to_stockouts_bdt": round(unserved_everywhere),
             "of_which_in_capacity_gap_hexagons_bdt": round(unserved_in_capacity_gaps),
             "typical_agent_monthly_volume_bdt": round(model["typical_agent_monthly_volume_bdt"]),
-            "note": ("Demand is a synthetic potential surface scaled so that areas with agents are balanced on average. "
-                     "Capacity gaps come from real (synthetic-simulation) stockout data."),
+            "note": ("Demand potential comes from the 2022 census population of 38 district towns (square-root weighting, "
+                     "a placeholder for the 10 smallest), spread around each town by an assumed reach and scaled so that "
+                     "areas with agents balance out on average. Capacity gaps come from real (synthetic-simulation) stockout data."),
         }
 
     async def cell_detail(self, h3_id, as_of_text=None):

@@ -30,7 +30,7 @@ export function RouteFilters({ districts, district, capacity, maxStops }: RouteF
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="capacity">Van cash capacity (BDT)</Label>
-        <Input id="capacity" name="capacity" type="number" min={1} step={100000} defaultValue={capacity} className="w-[190px]" />
+        <Input id="capacity" name="capacity" type="number" min={1} step="any" defaultValue={capacity} className="w-[190px]" />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="stops">Max stops</Label>

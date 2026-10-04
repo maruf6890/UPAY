@@ -178,15 +178,23 @@
     ]
   },
   "anomaly": {
-    "roc_auc_agent_day": 0.8889216974697652,
-    "r_precision_mean": 0.44,
-    "precision_at_threshold": 0.23902439024390243,
-    "recall_at_threshold": 0.5212765957446809,
-    "episode_detection_rate": 0.6666666666666666,
-    "false_alerts_per_day": 2.6,
+    "roc_auc_agent_day": 0.9445377871675011,
+    "r_precision_mean": 0.41,
+    "precision_at_threshold": 0.23963133640552994,
+    "recall_at_threshold": 0.5531914893617021,
+    "episode_detection_rate": 1.0,
+    "episodes_caught": "12/12",
+    "episode_detection_by_type": {
+      "fake_cash_in": "3/3",
+      "odd_hours": "3/3",
+      "structuring": "3/3",
+      "velocity_spike": "3/3"
+    },
+    "false_alerts_per_day": 2.75,
     "thresholds": {
-      "medium": 0.4695935180806607,
-      "high": 0.4939873855142164
-    }
+      "medium": 0.4710330324600597,
+      "high": 0.4990800883869616
+    },
+    "min_log_spread": 0.3
   }
 }

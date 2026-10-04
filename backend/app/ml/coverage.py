@@ -1,7 +1,7 @@
 """C1 - Coverage gap map (H3 hexagons).
 
 For every hexagon we compare
-    DEMAND  = how much mobile-money activity the area could generate (synthetic potential surface), with
+    DEMAND  = how much mobile-money activity the area could generate (census-population potential surface, see app/data/bd_towns.py), with
     SUPPLY  = how much our agents there actually handle (observed volume of the last 28 days).
 
 Gap types (checked in this order):
