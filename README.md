@@ -29,6 +29,9 @@ The project was built for the **DIU CPC × upay AI Hackathon 2026 — Track 05**
 
 ---
 
+<!-- Banner Image (Usually at the very top of the README) -->
+![upay Pulse Banner](ss/banner.png)
+
 ## Overview
 
 A mobile-money agent typically manages two balances:
@@ -252,12 +255,14 @@ The platform uses:
 * Account lockout
 * `httpOnly` cookies
 
-### Bilingual Interface
+<!-- Copilot Service Flow -->
+### OVERVIEW OF COPILOT SERVICE
+![Copilot Service](ss/copilot_service.jpeg)
 
-Operational advice, model explanations, and AI-generated briefs can be displayed in:
+<!-- Demand Distribution Graph -->
+### DEMAND DISTRIBUTION ACROSS THE COUNTRY
+![Demand Distribution](ss/demeand_distribution.png)
 
-* English
-* Bangla
 
 ### Reproducible Synthetic Dataset
 
@@ -280,34 +285,8 @@ FastAPI exposes **33 documented endpoints** through OpenAPI/Swagger.
 
 # Architecture
 
-```text
-                         ┌─────────────────────────┐
-                         │       Next.js 16        │
-                         │      React 19 UI        │
-                         └────────────┬────────────┘
-                                      │
-                                      │ HTTP / Server Actions
-                                      ▼
-                         ┌─────────────────────────┐
-                         │       FastAPI API       │
-                         │        Python 3.12      │
-                         └────────────┬────────────┘
-                                      │
-              ┌───────────────────────┼───────────────────────┐
-              │                       │                       │
-              ▼                       ▼                       ▼
-      ┌───────────────┐      ┌────────────────┐      ┌────────────────┐
-      │ PostgreSQL 16 │      │   ML Services  │      │ AI / Copilot   │
-      │               │      │                │      │                │
-      │ Agents        │      │ LightGBM       │      │ Gemini         │
-      │ Transactions  │      │ Isolation      │      │ Verified data  │
-      │ Users         │      │ Forest         │      │ Templates      │
-      │ Reviews       │      │ Churn          │      │ SHAP reasons   │
-      └───────────────┘      │ Performance    │      └────────────────┘
-                             │ Coverage       │
-                             │ Routing        │
-                             └────────────────┘
-```
+<!-- Architecture Diagram -->
+![Architecture Diagram](ss/architecture.jpeg)
 
 ---
 
@@ -422,7 +401,42 @@ FastAPI exposes **33 documented endpoints** through OpenAPI/Swagger.
         └── types/
 ```
 
+## Live Deployment
+
+The latest deployed version of **upay Pulse** is available online. The frontend communicates directly with the deployed backend through the configured production API URL.
+
+| Service | URL |
+|---|---|
+| **Frontend** | [https://upay-8fju.onrender.com/login](https://upay-8fju.onrender.com/login) |
+| **Backend API** | [https://upay-backend-ywmk.onrender.com/](https://upay-backend-ywmk.onrender.com/) |
+| **API Documentation** | [https://upay-backend-ywmk.onrender.com/docs](https://upay-backend-ywmk.onrender.com/docs) |
+| **API Health Check** | [https://upay-backend-ywmk.onrender.com/health](https://upay-backend-ywmk.onrender.com/health) |
+
 ---
+
+## Local Development
+
+For local development, the application is containerized and managed using **Docker Compose**, which provisions the frontend, backend, and PostgreSQL database automatically.
+
+### Starting the Application
+
+To build and start the complete application locally, run the following command from the root directory:
+
+```bash
+docker compose up -d --build
+```
+
+### Local Services
+
+Once the containers are successfully running, the local services will be accessible at the following endpoints:
+
+| Service | URL / Connection String |
+|---|---|
+| **Frontend** | [http://localhost:3000](http://localhost:3000) |
+| **Backend API** | [http://localhost:8000](http://localhost:8000) |
+| **API Documentation (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) |
+| **Health Check** | [http://localhost:8000/health](http://localhost:8000/health) |
+| **PostgreSQL Database** | `postgresql://upay:upay@localhost:5434/upay_pulse` |
 
 # Getting Started
 
@@ -530,7 +544,7 @@ These artifacts can be reused by later backend runs.
 
 ---
 
-# 6. Start the Backend and Frontend
+# 6. Start the Backend and Frontend and Database with Docker
 
 Once the seed job completes:
 
@@ -548,7 +562,6 @@ You should see:
 
 ```text
 db
-seed
 backend
 frontend
 ```
@@ -624,7 +637,7 @@ If you want to run the backend manually, use a Python virtual environment.
 ## 1. Create a Virtual Environment
 
 ```bash
-python3 -m venv .venv
+python -m venv .venv
 ```
 
 Activate it:
@@ -713,22 +726,6 @@ python -m scripts.create_user demo
 | Map shows hexagons on a plain background    | The basemap requires internet access; the map data itself still works offline                |
 | Changed `NEXT_PUBLIC_*` but nothing changed | Rebuild the frontend image                                                                   |
 
-### Unlock a Locked User
-
-For example:
-
-```bash
-docker compose run --rm backend \
-  python3 -m scripts.create_user unlock --username manager
-```
-
-### Rebuild the Frontend
-
-After changing frontend build-time variables:
-
-```bash
-docker compose up -d --build frontend
-```
 
 ---
 
