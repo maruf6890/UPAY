@@ -160,26 +160,7 @@ def run_training(s: Settings | None = None, log=lambda *a: print(*a, flush=True)
 
     # ---------- anomaly detection ----------
     ad, thr = anom.fit(daily, agents, train_end, s)
-    te = ad[ad.date >= test_start]
-    auc = float(roc_auc_score(te.is_anomaly, te.alert_score))
-    rprec = []
-    for _, g in te.groupby("date"):
-        k = int(g.is_anomaly.sum())
-        if k:
-            rprec.append(g.nlargest(k, "alert_score").is_anomaly.mean())
-    flagged = te.alert_score >= thr["medium"]
-    labels = t["labels"]
-    ep_hit = []
-    for _, e in labels.iterrows():
-        m = (ad.agent_id == e.agent_id) & (ad.date >= e.start) & (ad.date <= e.end) & (ad.date >= test_start)
-        if m.any():
-            ep_hit.append(bool((ad.loc[m, "alert_score"] >= thr["medium"]).any()))
-    metrics["anomaly"] = dict(
-        roc_auc_agent_day=auc, r_precision_mean=float(np.mean(rprec)) if rprec else None,
-        precision_at_threshold=float(te.loc[flagged, "is_anomaly"].mean()) if flagged.any() else None,
-        recall_at_threshold=float(flagged[te.is_anomaly].mean()), episode_detection_rate=float(np.mean(ep_hit)) if ep_hit else None,
-        false_alerts_per_day=float((flagged & ~te.is_anomaly).groupby(te.date).sum().mean()), thresholds=thr,
-    )
+    metrics["anomaly"] = anom.evaluate(ad, thr, t["labels"], test_start)
 
     calib["thresholds_anomaly"] = thr
     save_artifacts(models, scale, calib, s)

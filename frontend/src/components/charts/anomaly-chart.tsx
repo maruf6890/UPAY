@@ -17,8 +17,8 @@ export function AnomalyChart({ points, medium, high }: AnomalyChartProps) {
         <XAxis dataKey="date" tickFormatter={formatDay} tickLine={false} axisLine={false} minTickGap={28} />
         <YAxis domain={[0.3, 0.6]} tickCount={4} tickLine={false} axisLine={false} width={40} />
         <Tooltip content={<ChartTooltipContent config={config} labelFormatter={(label) => formatDay(String(label))} valueFormatter={(value) => value.toFixed(3)} />} />
-        <ReferenceLine y={medium} stroke="var(--warning)" strokeDasharray="4 4" label={{ value: "Review", position: "insideBottomRight", fill: "var(--warning)", fontSize: 11 }} />
-        <ReferenceLine y={high} stroke="var(--danger)" strokeDasharray="4 4" label={{ value: "High", position: "insideTopRight", fill: "var(--danger)", fontSize: 11 }} />
+        <ReferenceLine y={medium} stroke="var(--warning)" strokeDasharray="4 4" label={{ value: "Review", position: "insideTopRight", fill: "var(--warning)", fontSize: 11 }} />
+        <ReferenceLine y={high} stroke="var(--danger)" strokeDasharray="4 4" label={{ value: "High", position: "insideBottomRight", fill: "var(--danger)", fontSize: 11 }} />
         <Line type="monotone" dataKey="alertScore" stroke="var(--ai)" strokeWidth={2.5} dot={false} />
       </LineChart>
     </ChartContainer>

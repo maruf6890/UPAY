@@ -4,6 +4,7 @@ import { Bilingual } from "@/components/shared/bilingual";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LevelBadge } from "@/components/shared/level-badge";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BalanceChart } from "@/components/charts/balance-chart";
@@ -60,9 +61,11 @@ export function MyStatusWidget({ data }: { data: MyStatusData }) {
             <div className="text-xs text-muted-foreground">Expected to run out</div>
             <div className="mt-1 text-xl font-semibold">{data.expectedStockoutTime ? formatTime(data.expectedStockoutTime) : "Not expected today"}</div>
           </div>
-          <Link href={`/agents/${data.agentCode}`} prefetch={false} className="inline-flex items-center gap-1 text-xs font-medium text-ink-secondary hover:text-foreground">
-            Full forecast <ArrowRight className="size-3.5" />
-          </Link>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/agents/${data.agentCode}`} prefetch={false}>
+              Full forecast <ArrowRight className="size-3.5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </Card>
