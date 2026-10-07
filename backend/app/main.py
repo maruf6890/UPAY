@@ -9,7 +9,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.deps import Ctx
 from app.api.routes import router
 from app.core.config import get_settings
-from app.db import migrate
 from app.db.pool import create_pool
 from app.services.anomaly_service import AnomalyService
 from app.services.brief_service import BriefService
@@ -26,7 +25,6 @@ from app.services.coverage_service import CoverageService
 from fastapi import Depends
 
 from app.auth.deps import login_required
-from app.auth.security import check_auth_settings
 
 from app.api.routes_auth import router as auth_router
 from app.api.routes_dashboard import router as dashboard_router
